@@ -1,0 +1,48 @@
+---
+
+- name: template /etc/resolv.conf file
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: install some common packages
+  yum: 
+    name: "{{ item }}"
+    state: present
+  with_items:
+      - vim
+      - lvm2
+      - bash-completion
+      - bind-utils
+      - nfs-utils
+      - chrony
+      - nmap
+      - git
+  when: ansible_distribution == 'RedHat'
+
+- name: upgrade all packages
+  yum:
+    name: "*"
+    state: latest
+  when: ansible_distribution == 'RedHat'
+
+- name: restart server
+  become: True
+  shell: sleep 3 && shutdown -r now "Ansible updates triggered"
+  async: 1
+  poll: 0
+  ignore_errors: True
+
+- name: wait for server to come back online
+  become: False
+  local_action:
+    module: wait_for
+      host={{ inventory_hostname }}
+      port=22
+      state=started
+      delay=30
+      timeout=300
+...

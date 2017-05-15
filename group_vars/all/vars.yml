@@ -1,0 +1,65 @@
+---
+### 1 | Basic setup
+remote_user: ansible
+become: True
+become_method: sudo
+become_user: root
+admin_password: Redhat01
+
+### 2 | Components to install
+register_with_satellite: True
+install_ospd_on_rhv: True
+install_ospd_on_baremetal: False
+
+### 3 | Red Hat Subscription Management - Satellite
+satellite_org: osp
+satellite_server: sat.rrubins.lan
+satellite_ak: ak_rhosp10
+
+### 3 | Git/gerrit environment
+git_host: 192.168.2.11
+#git_branch: <branch>
+
+### 4 | Network environment
+dns_domain: rrubins.lan
+dns_server1: 192.168.2.9
+dns_server2: 8.8.8.8
+timezone: UTC
+
+### 5 | OSP Director
+osp_version: 10.0
+undercloud_dns_server: "{{ dns_server1 }}"
+undercloud_image_path: /home/stack/images
+undercloud_hostname: director.rrubins.lan
+undercloud_local_ip: 172.20.16.1/24
+undercloud_network_gateway: 172.20.16.1
+undercloud_public_vip: 172.20.16.2
+undercloud_admin_vip: 172.20.16.3
+undercloud_service_certificate: /etc/pki/instack-certs/undercloud.pem
+undercloud_certificate_generation_ca: False
+undercloud_service_principal: local
+undercloud_local_interface: eth1
+undercloud_local_mtu: 1500
+undercloud_network_cidr: 172.20.16.0/24
+undercloud_masquerade_network: 172.20.16.0/24
+undercloud_dhcp_start: 172.20.16.6
+undercloud_dhcp_end: 172.20.16.99
+#undercloud_hieradata_override:
+#undercloud_net_config_override:
+undercloud_inspection_interface: br-ctlplane
+undercloud_inspection_iprange: 172.20.16.101,172.20.16.199
+undercloud_inspection_extras: True
+undercloud_inspection_runbench: False
+undercloud_enable_uefi: True
+undercloud_debug: True
+undercloud_enable_tempest: True
+undercloud_enable_mistral: True
+undercloud_enable_zaqar: True
+undercloud_enable_telemetry: False
+undercloud_enable_ui: True
+undercloud_enable_validations: True
+undercloud_ipxe_enabled: True
+undercloud_store_events: False
+undercloud_scheduler_max_attempts: 30
+undercloud_clean_nodes: False
+...

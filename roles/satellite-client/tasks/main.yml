@@ -1,0 +1,28 @@
+---
+- name: template /etc/resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: 0644
+  tags: satellite_client
+ 
+- name: install katello ca cert package
+  yum: 
+    name: http://{{ satellite_server }}/pub/katello-ca-consumer-latest.noarch.rpm
+    state: present
+  tags: satellite_client
+
+- name: register with the satellite server
+  command: subscription-manager register --org "{{ satellite_org }}" --activationkey "{{ satellite_ak }}" --force
+  tags: satellite_client
+
+- name: install katello-agent
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - katello-agent
+  tags: satellite_client
+...

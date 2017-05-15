@@ -1,0 +1,5 @@
+---
+### ansible-undercloud/site.yml
+- include: undercloud.yml
+  when: install_ospd_on_rhv
+...

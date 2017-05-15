@@ -1,0 +1,9 @@
+---
+### ansible-undercloud/undercloud.yml
+- name: SETUP OSP ON BAREMETAL
+  hosts: ospd-servers
+  roles:
+    - { role: satellite-client, when: register_with_satellite }
+    - { role: common, when: install_ospd_on_rhv }
+    - { role: undercloud, when: install_ospd_on_rhv }
+...

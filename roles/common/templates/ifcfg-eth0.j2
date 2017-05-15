@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+DEVICE=eth0
+TYPE=Ethernet
+BOOTPROTO=none
+ONBOOT=yes
+IPV6INIT=no
+NM_CONTROLLED=no
+USERCTL=no
+IPADDR={{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}
+NETMASK={{ netmask }}
+GATEWAY={{ gateway }}
+DNS1={{ dns_server1 }}
+DNS2={{ dns_server2 }}
+DOMAIN={{ dns_domain }}

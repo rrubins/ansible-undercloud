@@ -1,0 +1,9 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+{% if register_with_satellite == True %}
+{{ satellite_server_ip }}	{{ satellite_server }}
+{% endif %}
+{% if install_ospd_on_baremetal == True %}
+{{ undercloud_server_ip }}	{{ undercloud_server }}
+{% endif %}

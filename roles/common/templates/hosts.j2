@@ -1,0 +1,36 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+{% if install_rhev == True %}
+{{ rhev_host1_ip }}	{{ rhev_host1 }}
+{{ rhev_host2_ip }}	{{ rhev_host2 }}
+{{ rhev_manager_ip }}	{{ rhev_manager }}
+{% endif %}
+{% if install_idm == True %}
+{{ idm_server_ip }}	{{ idm_server }}
+{% endif %}
+{% if install_satellite == True %}
+{{ satellite_server_ip }}	{{ satellite_server }}
+{% endif %}
+{% if install_tower == True %}
+{{ tower_server_ip }}	{{ tower_server }}
+{% endif %}
+{% if install_cfme == True %}
+{{ cfme_server_ip }}	{{ cfme_server }}
+{% endif %}
+{% if install_gitlab == True %}
+{{ gitlab_server_ip }}	{{ gitlab_server }}
+{% endif %}
+{% if install_efk == True %}
+{{ efk_server_ip }}	{{ efk_server }}
+{% endif %}
+{% if install_sensu == True %}
+{{ sensu_server_ip }}	{{ sensu_server }}
+{% endif %}
+{% if install_ospd_on_rhev == True %}
+{{ ospd_server_ip }}	{{ ospd_server }}
+{% endif %}
+{% if install_ospd_on_kvm == True %}
+{{ kvm_host_ip }}	{{ kvm_host }}
+{{ undercloud_server_ip }}	{{ undercloud_server }}
+{% endif %}

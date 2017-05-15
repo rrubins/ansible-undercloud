@@ -1,0 +1,30 @@
+{
+  "nodes": [
+  {% for node in overcloud_nodes %}
+    {
+      "name": "{{ node.name|replace('_', '-') }}",
+      "pm_password": {{ stack_priv_key.stdout | to_nice_json }},
+      "pm_type": "pxe_ssh",
+      "mac": [
+        "{{ node.mac }}"
+      ],
+      "cpu": "{{ flavors[node.flavor].vcpu }}",
+      "memory": "{{ flavors[node.flavor].memory }}",
+      "disk": "{{ flavors[node.flavor].disk }}",
+      "arch": "{{ libvirt_arch }}",
+      "pm_user": "stack",
+      "pm_addr": "{{ host_ip }}",
+      "capabilities": "profile:{{ node.flavor }},boot_option:local"
+    }
+    {% if not loop.last %}
+    ,
+    {% endif %}
+  {% endfor %}
+  ],
+  "arch": "{{ libvirt_arch }}",
+  "host-ip": "{{ host_ip }}",
+  "power_manager": "{{ nova_power_manager }}",
+  "seed-ip": "",
+  "ssh-key": {{ stack_priv_key.stdout | to_nice_json }},
+  "ssh-user": "stack"
+}

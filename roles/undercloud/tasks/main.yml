@@ -1,0 +1,155 @@
+---
+- name: add stack user
+  user:
+    name: stack
+    comment: "Stack User"
+    groups: wheel
+    state: present
+
+- name: copy stack sudo config file
+  copy:
+    src: stack.sudo
+    dest: /etc/sudoers.d/stack
+    mode: 0440
+
+- name: template /etc/resolv.conf file
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: create .ssh directory
+  become_user: stack
+  file:
+    path: /home/stack/.ssh
+    state: directory
+    mode: 0700
+
+- name: touch ssh config file
+  become_user: stack
+  file:
+    path: /home/stack/.ssh/config
+    state: touch
+    mode: 0600
+
+- name: add ssh config file contents
+  become_user: stack
+  blockinfile:
+    dest: /home/stack/.ssh/config
+    block: |
+      Host *
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+        ServerAliveInterval 60
+
+- name: install director packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+      - python-tripleoclient
+      - openstack-utils
+      - rhosp-director-images
+      - rhosp-director-images-ipa
+      - libguestfs-tools
+
+- name: create images directory
+  become_user: stack
+  file:
+    path: /home/stack/images
+    state: directory
+    mode: 0755
+
+- name: ensure templates directory / soft link does not exist
+  become_user: stack
+  file:
+    path: /home/stack/templates
+    state: absent
+
+- name: add ssh private key for git interaction
+  become_user: stack
+  copy:
+    src: id_rsa_ansible
+    dest: /home/stack/.ssh/id_rsa
+    mode: 0600
+
+- name: clone templates repo
+  become_user: stack
+  git:
+    accept_hostkey: yes
+    key_file: /home/stack/.ssh/id_rsa
+    dest: /home/stack/custom-templates
+    repo: ssh://git@{{ git_host }}/rrubins/osp10-hci-templates
+
+- name: ensure instack-certs directory exists
+  file:
+    path: /etc/pki/instack-certs
+    state: directory
+    mode: 0755
+
+- name: copy undercloud.pem cert
+  copy:
+    src: undercloud.pem
+    dest: /etc/pki/instack-certs/undercloud.pem
+
+- name: create soft link for undercloud.pem
+  file:
+    path: /etc/pki/ca-trust/source/anchors/undercloud.pem
+    src: /etc/pki/instack-certs/undercloud.pem
+    state: link
+
+- name: update ca-trust certs
+  command: /bin/update-ca-trust extract
+
+- name: template undercloud.conf
+  become_user: stack
+  template:
+    src: undercloud.conf.j2
+    dest: /home/stack/undercloud.conf
+
+- name: install undercloud
+  become_user: stack
+  command: openstack undercloud install chdir=/home/stack
+
+- name: extract overcloud images
+  become_user: stack
+  unarchive:
+    copy: false
+    src: /usr/share/rhosp-director-images/overcloud-full-latest-{{ osp_version }}.tar
+    dest: /home/stack/images/
+
+- name: extract ironic python agent images
+  become_user: stack
+  unarchive:
+    copy: false
+    src: /usr/share/rhosp-director-images/ironic-python-agent-latest-{{ osp_version }}.tar
+    dest: /home/stack/images/
+
+- name: set root password on overcloud image
+  shell: export LIBGUESTFS_BACKEND=direct && virt-customize -a /home/stack/images/overcloud-full.qcow2 --root-password password:{{ admin_password }}
+
+- name: upload overcloud images
+  become_user: stack
+  shell: source ~/stackrc && openstack overcloud image upload --image-path /home/stack/images --update-existing
+  ignore_errors: true
+
+- name: template instack.json file
+  become_user: stack
+  template: 
+    src: instackenv.json.j2
+    dest: /home/stack/instackenv.json
+
+- name: import instackenv.json
+  become_user: stack
+  shell: source ~/stackrc && openstack baremetal import --json instackenv.json
+
+- name: configure baremetal boot
+  become_user: stack
+  shell: source ~/stackrc && openstack baremetal configure boot
+
+- name: run bulk introspection
+  become_user: stack
+  shell: source ~/stackrc && openstack baremetal introspection bulk start
+...
