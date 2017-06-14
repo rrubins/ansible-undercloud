@@ -1,0 +1,21 @@
+# Keystone
+keystone::wsgi::apache::threads: "{{ keystone_wsgi_apache_threads }}"
+keystone::wsgi::apache::workers: "{{ keystone_wsgi_apache_workers }}"
+# Nova
+nova::wsgi::apache::threads: "{{ nova_wsgi_apache_threads }}"
+nova::wsgi::apache::workers: "{{ nova_wsgi_apache_workers }}"
+nova::rpc_response_timeout: "{{ nova_rpc_response_timeout }}"
+# Heat
+heat::engine::num_engine_workers: "{{ heat_engine_num_engine_workers }}"
+heat::rpc_response_timeout: "{{ heat_rpc_response_timeout }}"
+# Ironic
+ironic::rpc_response_timeout: "{{ ironic_rpc_response_timeout }}"
+
+# Other potential scale tunables
+#
+# nova::compute::ironic::max_concurrent_builds: 4
+#
+# ironic::config:
+#   'DEFAULT/executor_thread_pool_size': value => 8
+# HAProxy
+# tripleo::haproxy::haproxy_default_timeout: [ 'http-request 10s', 'queue 2m', 'connect 10s', 'client 2m', 'server 2m', 'check 10s' ]

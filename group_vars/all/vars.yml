@@ -8,7 +8,8 @@ admin_password: Redhat01
 
 ### 2 | Components to install
 register_with_satellite: True
-install_ospd_on_rhv: True
+install_ospd_on_kvm: True
+install_ospd_on_rhv: False
 install_ospd_on_baremetal: False
 
 ### 3 | Red Hat Subscription Management - Satellite
@@ -44,7 +45,7 @@ undercloud_network_cidr: 172.20.16.0/24
 undercloud_masquerade_network: 172.20.16.0/24
 undercloud_dhcp_start: 172.20.16.6
 undercloud_dhcp_end: 172.20.16.99
-#undercloud_hieradata_override:
+undercloud_hieradata_override: /home/stack/extra_tuning.yaml
 #undercloud_net_config_override:
 undercloud_inspection_interface: br-ctlplane
 undercloud_inspection_iprange: 172.20.16.101,172.20.16.199
@@ -62,4 +63,14 @@ undercloud_ipxe_enabled: True
 undercloud_store_events: False
 undercloud_scheduler_max_attempts: 30
 undercloud_clean_nodes: False
+
+### 6 | Hieradata Override
+keystone_wsgi_apache_threads: 1
+keystone_wsgi_apache_workers: 4
+nova_wsgi_apache_threads: 1
+nova_wsgi_apache_workers: 4
+nova_rpc_response_timeout: 900
+heat_engine_num_engine_workers: 4
+heat_rpc_response_timeout: 900
+ironic_rpc_response_timeout: 900
 ...

@@ -109,6 +109,12 @@
     src: undercloud.conf.j2
     dest: /home/stack/undercloud.conf
 
+- name: template extra_tuning.yaml
+  become_user: stack
+  template:
+    src: extra_tuning.yaml.j2
+    dest: /home/stack/extra_tuning.yaml
+
 - name: install undercloud
   become_user: stack
   command: openstack undercloud install chdir=/home/stack
@@ -133,6 +139,8 @@
 - name: upload overcloud images
   become_user: stack
   shell: source ~/stackrc && openstack overcloud image upload --image-path /home/stack/images --update-existing
+  args:
+    chdir: /home/stack/images
   ignore_errors: true
 
 - name: template instack.json file
