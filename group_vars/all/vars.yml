@@ -13,9 +13,9 @@ install_ospd_on_rhv: False
 install_ospd_on_baremetal: False
 
 ### 3 | Red Hat Subscription Management - Satellite
-satellite_org: osp
-satellite_server: sat.rrubins.lan
-satellite_ak: ak_rhosp10
+satellite_org: Rubes
+satellite_server: foreman.rrubins.lan
+satellite_ak: ak_rhosp11
 
 ### 3 | Git/gerrit environment
 git_host: 192.168.2.11
