@@ -7,10 +7,10 @@ Table of Contents
 .. toctree::
    :maxdepth: 2
 
-   introduction
-   deployment
-   usage
-   troubleshooting
+   introduction/index.rst
+   deployment/index.rst
+   usage/index.rst
+   troubleshooting/index.rst
 
 Search
 ------
