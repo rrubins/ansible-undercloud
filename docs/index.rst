@@ -1,6 +1,7 @@
 Ansible Undercloud
 ==================
-Ansible playbook for TripleO Undercloud installation and configuration.
+Ansible role for installing and configuring TripleO undercloud (aka osp-Director) in Red Hat OpenStack Platform environment.
+The focus is Red Hat's downstream openstack (RH-OSP) mostly used in larger enterprises and telcos.
 
 Table of Contents
 -----------------
