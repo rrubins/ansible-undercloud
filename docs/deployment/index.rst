@@ -4,7 +4,9 @@ Deployment
 Prereqs
 -------
 Add DNS entries for undercloud and overcloud's virtual IP.
+
 Ensure your git server is functional and contains the correct templates (only required if you want to download your customized overcloud tripleo-heat-templates) 
+
 Ensure your Satellite content views and activation keys are setup and operational/tested.
 
 Step 1
